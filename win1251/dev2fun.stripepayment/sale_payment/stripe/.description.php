@@ -1,10 +1,8 @@
 <?if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();?><?
 /**
- *
  * @author darkfriend <hi@darkfriend.ru>
- * @copyright (c) 2017, darkfriend
- * @version 1.0.0
- *
+ * @copyright (c) 2018, darkfriend
+ * @version 1.0.1
  */
 
 \Bitrix\Main\Loader::includeModule('dev2fun.stripepayment');
@@ -72,4 +70,18 @@ $arPSCorrespondence = array(
         'SORT' => 500,
         "TYPE" => "ORDER"
     ),
+	"REDIRECT_SUCCESS" => array(
+		"NAME" => GetMessage("REDIRECT_SUCCESS"),
+		"DESCR" => GetMessage("REDIRECT_SUCCESS_DESCR"),
+		"VALUE" => "",
+		'SORT' => 600,
+		// "TYPE" => "ORDER"
+	),
+	"REDIRECT_FAIL" => array(
+		"NAME" => GetMessage("REDIRECT_FAIL"),
+		"DESCR" => GetMessage("REDIRECT_FAIL_DESCR"),
+		"VALUE" => "",
+		'SORT' => 700,
+		// "TYPE" => "ORDER"
+	),
 );

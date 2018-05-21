@@ -7,8 +7,8 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
  * Time: 21:13
  */
 ?>
-<link rel="stylesheet" href="/bitrix/php_interface/include/sale_payment/stripe/style.css?v1.9" type="text/css">
-<script src="/bitrix/php_interface/include/sale_payment/stripe/js/jquery.inputmask.bundle.min.js"></script>
+<link rel="stylesheet" href="/bitrix/modules/dev2fun.stripepayment/sale_payment/stripe/style.css?v1.10" type="text/css">
+<script src="/bitrix/modules/dev2fun.stripepayment/sale_payment/stripe/js/jquery.inputmask.bundle.min.js"></script>
 
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 <form action="<?=$APPLICATION->GetCurDir();?>?ORDER_ID=<?=$orderID?>" method="POST" id="stripe-payment-form" class="stripe_payment__form">
@@ -26,15 +26,15 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
         <div class="form-left">
             <span class="stripe_payment__label">Date on which the credit card</span>
             <div class="form-row">
-                <input type="text" size="2" name="CARD[month]" data-stripe="exp_month" class="stripe_payment__input stripe_payment__input_date" data-inputmask="'mask': '99', 'alias': 'mm', 'placeholder':'mm'" value="<?=DevHelpers::htmlspecialchars($_REQUEST['CARD']['month'])?>">
+                <input type="text" size="2" name="CARD[month]" data-stripe="exp_month" class="stripe_payment__input stripe_payment__input_date" data-inputmask="'mask': '99', 'alias': 'mm', 'placeholder':'mm'" value="<?=htmlspecialchars($_REQUEST['CARD']['month'])?>">
                 <span class="stripe_payment__slash"> / </span>
-                <input type="text" size="2" name="CARD[year]" data-stripe="exp_year" class="stripe_payment__input stripe_payment__input_date" data-inputmask="'mask': '9999', 'alias': 'yyyy', 'placeholder':'yyyy'" value="<?=DevHelpers::htmlspecialchars($_REQUEST['CARD']['year'])?>">
+                <input type="text" size="2" name="CARD[year]" data-stripe="exp_year" class="stripe_payment__input stripe_payment__input_date" data-inputmask="'mask': '9999', 'alias': 'yyyy', 'placeholder':'yyyy'" value="<?=htmlspecialchars($_REQUEST['CARD']['year'])?>">
             </div>
         </div>
         <div class="form-right">
             <label>
                 <span class="stripe_payment__label">CVC</span>
-                <input type="text" size="4" name="CARD[cvc]" data-stripe="cvc" class="stripe_payment__input stripe_payment__input_cvc" data-inputmask="'mask': '999'" value="<?=DevHelpers::htmlspecialchars($_REQUEST['CARD']['cvc'])?>">
+                <input type="text" size="4" name="CARD[cvc]" data-stripe="cvc" class="stripe_payment__input stripe_payment__input_cvc" data-inputmask="'mask': '999'" value="<?=htmlspecialchars($_REQUEST['CARD']['cvc'])?>">
             </label>
         </div>
     </div>
