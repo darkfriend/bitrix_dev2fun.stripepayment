@@ -22,13 +22,13 @@ Class dev2fun_stripepayment extends CModule
     function dev2fun_stripepayment(){
         $path = str_replace("\\", "/", __FILE__);
         $path = substr($path, 0, strlen($path) - strlen("/index.php"));
-        $arModuleVersion = include($path."/version.php");
+        include($path."/version.php");
         if (is_array($arModuleVersion) && array_key_exists("VERSION", $arModuleVersion)){
-                $this->MODULE_VERSION = $arModuleVersion["VERSION"];
-                $this->MODULE_VERSION_DATE = $arModuleVersion["VERSION_DATE"];
+            $this->MODULE_VERSION = $arModuleVersion["VERSION"];
+            $this->MODULE_VERSION_DATE = $arModuleVersion["VERSION_DATE"];
         } else {
-                $this->MODULE_VERSION = '1.0.0';
-                $this->MODULE_VERSION_DATE = '2017-03-28 15:00:00';
+            $this->MODULE_VERSION = '1.0.0';
+            $this->MODULE_VERSION_DATE = '2017-03-28 15:00:00';
         }
         $this->MODULE_NAME = GetMessage("DEV2FUN_MODULE_NAME_STRIPE");
         $this->MODULE_DESCRIPTION = GetMessage("DEV2FUN_MODULE_DESCRIPTION_STRIPE");
