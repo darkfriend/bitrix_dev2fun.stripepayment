@@ -2,18 +2,20 @@
 global $MESS;
 
 $MESS["STRIPE_TITLE"]="Stripe";
-$MESS["STRIPE_DDESCR"]="Ïëàòåæíàÿ ñèñòåìà Stripe.com";
-$MESS["STRIPE_TEMPLATE_NAME"]="Øàáëîí";
-$MESS["STRIPE_TEMPLATE_DESCR"]="Óêàæèòå îäèí èç íåñêîëüêèõ øàáëîíîâ èëè ñîçäàéòå ñâîé";
-$MESS["LIVE_MODE"]="Âûêëþ÷èòü òåñòîâûé ðåæèì";
-$MESS["TEST_SECRET_KEY"]="Óêàæèòå òåñòîâûé Secret key";
-$MESS["TEST_PUBLISH_KEY"]="Óêàæèòå òåñòîâûé Publish key";
-$MESS["LIVE_SECRET_KEY"]="Óêàæèòå Secret key";
-$MESS["LIVE_PUBLISH_KEY"]="Óêàæèòå Publish key";
+$MESS["STRIPE_DDESCR"]="ÐŸÐ»Ð°Ñ‚ÐµÐ¶Ð½Ð°Ñ ÑÐ¸ÑÑ‚ÐµÐ¼Ð° Stripe.com";
+$MESS["STRIPE_TEMPLATE_NAME"]="Ð¨Ð°Ð±Ð»Ð¾Ð½";
+$MESS["STRIPE_TEMPLATE_DESCR"]="Ð£ÐºÐ°Ð¶Ð¸Ñ‚Ðµ Ð¾Ð´Ð¸Ð½ Ð¸Ð· Ð½ÐµÑÐºÐ¾Ð»ÑŒÐºÐ¸Ñ… ÑˆÐ°Ð±Ð»Ð¾Ð½Ð¾Ð² Ð¸Ð»Ð¸ ÑÐ¾Ð·Ð´Ð°Ð¹Ñ‚Ðµ ÑÐ²Ð¾Ð¹";
+$MESS["LIVE_MODE"]="Ð’ÐºÐ»ÑŽÑ‡Ð¸Ñ‚ÑŒ LIVE-Ñ€ÐµÐ¶Ð¸Ð¼";
+$MESS["TEST_SECRET_KEY"]="Ð£ÐºÐ°Ð¶Ð¸Ñ‚Ðµ Ñ‚ÐµÑÑ‚Ð¾Ð²Ñ‹Ð¹ Secret key";
+$MESS["TEST_PUBLISH_KEY"]="Ð£ÐºÐ°Ð¶Ð¸Ñ‚Ðµ Ñ‚ÐµÑÑ‚Ð¾Ð²Ñ‹Ð¹ Publish key";
+$MESS["LIVE_SECRET_KEY"]="Ð£ÐºÐ°Ð¶Ð¸Ñ‚Ðµ Secret key";
+$MESS["LIVE_PUBLISH_KEY"]="Ð£ÐºÐ°Ð¶Ð¸Ñ‚Ðµ Publish key";
+$MESS["STRIPE_SOURCE_WEBHOOK"]="Ð£ÐºÐ°Ð¶Ð¸Ñ‚Ðµ Webhook-token";
 
-$MESS["REDIRECT_SUCCESS"]="Ñòðàíèöà ïîñëå óñïåøíîé îïëàòû";
-$MESS["REDIRECT_SUCCESS_DESCR"]="Óêàæèòå ññûëêó íà ñòðàíèöó ïîñëå óñïåøíîé îïëàòû. Ê ññûëêå áóäåò äîáàâëåíî pay=success&ORDER_ID=#ID#";
+$MESS["REDIRECT_SUCCESS"]="Ð¡Ñ‚Ñ€Ð°Ð½Ð¸Ñ†Ð° Ð¿Ð¾ÑÐ»Ðµ ÑƒÑÐ¿ÐµÑˆÐ½Ð¾Ð¹ Ð¾Ð¿Ð»Ð°Ñ‚Ñ‹";
+$MESS["REDIRECT_SUCCESS_DESCR"]="Ð£ÐºÐ°Ð¶Ð¸Ñ‚Ðµ ÑÑÑ‹Ð»ÐºÑƒ Ð½Ð° ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñƒ Ð¿Ð¾ÑÐ»Ðµ ÑƒÑÐ¿ÐµÑˆÐ½Ð¾Ð¹ Ð¾Ð¿Ð»Ð°Ñ‚Ñ‹. Ðš ÑÑÑ‹Ð»ÐºÐµ Ð±ÑƒÐ´ÐµÑ‚ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð¾ pay=success&ORDER_ID=#ID#";
+$MESS["STRIPE_SOURCE_WEBHOOK_DESCR"]="Ð’Ð°Ð¼ Ð½ÑƒÐ¶Ð½Ð¾ ÑƒÐºÐ°Ð·Ð°Ñ‚ÑŒ Webhook-token, Ñ‡Ñ‚Ð¾Ð± Ñ€Ð°Ð±Ð¾Ñ‚Ð°Ð»Ð¸ Ð²ÐµÐ±Ñ…ÑƒÐºÐ¸.";
 
-$MESS["REDIRECT_FAIL"]="Ñòðàíèöà ïðè îøèáêå âî âðåìÿ îïëàòû";
-$MESS["REDIRECT_FAIL_DESCR"]="Óêàæèòå ññûëêó íà ñòðàíèöó ïðè îøèáêå îïëàòû. Ê ññûëêå áóäåò äîáàâëåíî pay=fail&ORDER_ID=#ID#";
+$MESS["REDIRECT_FAIL"]="Ð¡Ñ‚Ñ€Ð°Ð½Ð¸Ñ†Ð° Ð¿Ñ€Ð¸ Ð¾ÑˆÐ¸Ð±ÐºÐµ Ð²Ð¾ Ð²Ñ€ÐµÐ¼Ñ Ð¾Ð¿Ð»Ð°Ñ‚Ñ‹";
+$MESS["REDIRECT_FAIL_DESCR"]="Ð£ÐºÐ°Ð¶Ð¸Ñ‚Ðµ ÑÑÑ‹Ð»ÐºÑƒ Ð½Ð° ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñƒ Ð¿Ñ€Ð¸ Ð¾ÑˆÐ¸Ð±ÐºÐµ Ð¾Ð¿Ð»Ð°Ñ‚Ñ‹. Ðš ÑÑÑ‹Ð»ÐºÐµ Ð±ÑƒÐ´ÐµÑ‚ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð¾ pay=fail&ORDER_ID=#ID#";
 ?>

@@ -1,18 +1,64 @@
-.sale_order_full_table {}
-.stripe_payment__form{
-    padding: 0 25px 0 26px;
+.stripe_payment__row{
+    display: flex;
+    width: 100%;
+    margin-top: 20px;
 }
-.stripe_payment__form .form-row{
+
+.stripe_payment__row:first-child {
+    margin-top: 0;
+}
+
+.stripe_payment__row .stripe_payment__col:not(:last-child) {
+    margin-right: 20px;
+}
+
+.stripe_submit{
+    display: inline-block;
+    height: 40px;
+    width: 100%;
+    margin-top: 20px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 40px;
+    letter-spacing: 0.025em;
+    text-decoration: none;
+    white-space: nowrap;
+    background: #32325d;
+    color: #fff;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
+    -webkit-transition: all 150ms ease;
+    transition: all 150ms ease;
+}
+
+.stripe_submit:hover{
+    background-color: #43458b;
+    transform: translateY(-1px);
+    box-shadow: 0 7px 14px rgba(50, 50, 93, .10), 0 3px 6px rgba(0, 0, 0, .08);
+}
+
+.sale_order_full_table {
+}
+
+.stripe_payment__form {
+    /*padding: 0 25px 0 26px;*/
+}
+
+.stripe_payment__form .form-row {
     display: inline-block;
     width: 100%;
 }
-.stripe_payment__label{
+
+.stripe_payment__label {
     font-size: 18px;
     margin-bottom: 8px;
     display: block;
     color: #2a2a2a;
 }
-input.stripe_payment__input{
+
+input.stripe_payment__input {
     background-color: #ffffff;
     border: solid 1px #d5d0d0;
     border-radius: 2px;
@@ -20,30 +66,37 @@ input.stripe_payment__input{
     height: 50px;
     padding: 0 15px;
 }
-input.stripe_payment__input_card{
+
+input.stripe_payment__input_card {
     width: 100%;
 }
-input.stripe_payment__input_date{
+
+input.stripe_payment__input_date {
     width: 75px;
     float: left;
 }
-.stripe_payment__slash{
+
+.stripe_payment__slash {
     float: left;
     line-height: 50px;
     font-size: 18px;
     margin: 0 17px 0 20px;
 }
-input.stripe_payment__input_cvc{
+
+input.stripe_payment__input_cvc {
     width: 174px;
 }
-.form-left{
+
+.form-left {
     float: left;
 }
-.form-right{
+
+.form-right {
     float: right;
     width: 174px;
 }
-.stripe-submit{
+
+.stripe-submit {
     width: 205px;
     height: 50px;
     border: none;
@@ -54,17 +107,21 @@ input.stripe_payment__input_cvc{
     font-size: 16px;
     cursor: pointer;
 }
-.stripe-submit:disabled{
+
+.stripe-submit:disabled {
     opacity: .5;
 }
-.payment-errors{
+
+.payment-errors {
     margin-bottom: 20px;
     display: block;
 }
+
 .payment-stripe td {
     width: 100%;
     display: block;
 }
-.payment-stripe td.ps_logo{
+
+.payment-stripe td.ps_logo {
     width: inherit;
 }
