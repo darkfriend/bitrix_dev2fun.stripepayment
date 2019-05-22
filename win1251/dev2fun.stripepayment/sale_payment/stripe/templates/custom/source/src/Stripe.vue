@@ -17,7 +17,7 @@
 		:stripe-key="stripeKey"
 		:error="error"
 		:form-action="formAction"
-		:currency="currency"
+		:currency="currencyEur"
 		:locale="locale.sepa"
 		:orderId="orderId"
 		v-if="mode=='sepa'"
@@ -26,8 +26,8 @@
 			:stripe-key="stripeKey"
 			:error="error"
 			:form-action="formAction"
-			:currency="currency"
-			:amount="amount"
+			:currency="currencyEur"
+			:amount="amountEur"
 			:redirectUrl="params.sofort.redirectUrl"
 			:locale="locale.sofort"
 			:orderId="orderId"
@@ -37,8 +37,8 @@
 			:stripe-key="stripeKey"
 			:error="error"
 			:form-action="formAction"
-			:currency="currency"
-			:amount="amount"
+			:currency="currencyEur"
+			:amount="amountEur"
 			:redirectUrl="params.giropay.redirectUrl"
 			:locale="locale.giropay"
 			:orderId="orderId"
@@ -74,7 +74,15 @@
 				type : String,
 				required : true
 			},
+			currencyEur: {
+				type : String,
+				required : true
+			},
 			amount: {
+				type : Number,
+				required : true
+			},
+			amountEur: {
 				type : Number,
 				required : true
 			},
@@ -93,6 +101,27 @@
 						redirectUrl: ''
 					},
 				}
+			},
+			modeList: {
+				type: Array,
+				default: [
+					{
+						key: 'card',
+						value: 'Card'
+					},
+					{
+						key: 'sepa',
+						value: 'Sepa Debit'
+					},
+					{
+						key: 'sofort',
+						value: 'Sofort'
+					},
+					{
+						key: 'giropay',
+						value: 'Giropay'
+					}
+				]
 			},
 			locale: {
 				type: Object,
@@ -126,24 +155,6 @@
 				// 	value: 'Карта'
 				// },
 				mode: 'card',
-				modeList: [
-					{
-						key: 'card',
-						value: 'Card'
-					},
-					{
-						key: 'sepa',
-						value: 'Sepa Debit'
-					},
-					{
-						key: 'sofort',
-						value: 'Sofort'
-					},
-					{
-						key: 'giropay',
-						value: 'Giropay'
-					}
-				]
 			};
 		}
 	}

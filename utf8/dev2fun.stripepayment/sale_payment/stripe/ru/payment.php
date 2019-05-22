@@ -5,12 +5,17 @@ $MESS["STRIPE_TITLE"]="Stripe";
 $MESS["STRIPE_DDESCR"]="Платежная система Stripe.com";
 $MESS["STRIPE_TEMPLATE_NAME"]="Шаблон";
 $MESS["STRIPE_TEMPLATE_DESCR"]="Укажите один из нескольких шаблонов или создайте свой";
+$MESS["STRIPE_PAYED_ORDER_STATUS_NAME"]="При успехе оплаты сменить статус на:";
+$MESS["STRIPE_PAYED_ORDER_STATUS_DESCR"]="Укажите на какой статус нужно сменить заказ, если произошла успешная оплата";
 $MESS["LIVE_MODE"]="Включить LIVE-режим";
 $MESS["TEST_SECRET_KEY"]="Укажите тестовый Secret key";
 $MESS["TEST_PUBLISH_KEY"]="Укажите тестовый Publish key";
 $MESS["LIVE_SECRET_KEY"]="Укажите Secret key";
 $MESS["LIVE_PUBLISH_KEY"]="Укажите Publish key";
 $MESS["STRIPE_SOURCE_WEBHOOK"]="Укажите Webhook-token";
+
+$MESS["STRIPE_MODS_NAME"]="Поддеживаемые режимы Stripe";
+$MESS["STRIPE_MODS_DESCR"]="Какие режимы выводить? (card, sepa, sofort, giropay)";
 
 $MESS["REDIRECT_SUCCESS"]="Страница после успешной оплаты";
 $MESS["REDIRECT_SUCCESS_DESCR"]="Укажите ссылку на страницу после успешной оплаты. К ссылке будет добавлено pay=success&ORDER_ID=#ID#";

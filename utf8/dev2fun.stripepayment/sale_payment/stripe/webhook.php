@@ -2,7 +2,7 @@
 /**
  * @author darkfriend <hi@darkfriend.ru>
  * @copyright (c) 2019, darkfriend
- * @version 1.1.0
+ * @version 1.2.0
  */
 require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
 
@@ -82,7 +82,7 @@ try {
 	$charge = $event['data']['object'];
 	if(empty($charge['metadata']['orderId']))
 		throw new \Exception('OrderId is not found!');
-	if(in_array($charge['status'],['succeeded','paid'])) {
+	if(in_array($charge['status'],['succeeded','paid','chargeable'])) {
 		/** @var \Bitrix\Sale\Order $order */
 		$order = Order::load($charge['metadata']['orderId']);
 		if(empty($order))
@@ -100,6 +100,8 @@ try {
 			"PS_CURRENCY" => $charge['currency'],
 			"PS_STATUS " => "Y",
 		);
+		if(!empty($paySystem['PSA_PARAMS']['PAYED_ORDER_STATUS']['VALUE']))
+			$arFields['STATUS_ID'] = $paySystem['PSA_PARAMS']['PAYED_ORDER_STATUS']['VALUE'];
 		$events = GetModuleEvents("dev2fun.stripepayment", "OnBeforeUpdateOrder", true);
 		foreach ($events as $arEvent) {
 			ExecuteModuleEventEx($arEvent, array(&$arFields, $charge, $orderID));

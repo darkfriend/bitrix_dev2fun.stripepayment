@@ -164,8 +164,8 @@
         // hiddenInput.setAttribute('name', 'stripeToken');
         // hiddenInput.setAttribute('value', token.id);
         // this.$refs.formStripe.appendChild(hiddenInput);
-        console.log(token.id);
-        console.log(token);
+        // console.log(token.id);
+        // console.log(token);
         this.stripeToken = token.id;
         // this.owner.name = token.owner.name;
         // this.owner.email = token.owner.email;

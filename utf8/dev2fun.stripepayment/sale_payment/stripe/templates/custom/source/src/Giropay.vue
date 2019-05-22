@@ -111,16 +111,22 @@
           metadata: {
             orderId: that.orderId
           },
-        }).then((result) => {
-          // handle result.error or result.source
-          // console.log('handle');
-          // console.log(result);
-          if(typeof result.error != 'undefined' && result.error.length>0) {
-            that.errors.push(result.error.message);
-          } else {
-            // console.log(result);
-            location.href=result.source.redirect.url;
+        }).then(
+          (result) => {
+            // handle result.error or result.source
+            // console.log('handle');
+            // console.log(result.error);
+            if(typeof result.source === 'undefined') {
+              that.errors.push(result.error.message);
+            } else {
+              location.href=result.source.redirect.url;
+            }
+          },
+          (error) => {
+            that.errors.push(error);
           }
+        ).catch((error)=>{
+          that.errors.push(error);
         });
       },
     }

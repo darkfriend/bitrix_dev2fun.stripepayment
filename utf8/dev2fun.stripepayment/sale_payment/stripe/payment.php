@@ -1,9 +1,8 @@
-<?if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
-	die();
+<?if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /**
  * @author darkfriend <hi@darkfriend.ru>
  * @copyright (c) 2019, darkfriend
- * @version 1.1.0
+ * @version 1.2.0
  */
 use \Bitrix\Main\Application;
 use \Bitrix\Sale\Order;
@@ -39,14 +38,20 @@ if($arOrder['CURRENCY']!='EUR') {
 	$arOrder['PRICE_EUR'] = $arOrder['PRICE'];
 }
 
-if($arOrder['PRICE_EUR'])
-	$arOrder['PRICE_EUR'] = number_format($sum, 2, '.', '');
+if(empty($arOrder['PRICE_EUR']))
+	$arOrder['PRICE_EUR'] = number_format($arOrder['PRICE'], 2, '.', '');
 $orderID = $order->getId();
 
 $events = GetModuleEvents("dev2fun.stripepayment", "OnBeforeShowStripe", true);
 foreach ($events as $arEvent) {
 	ExecuteModuleEventEx($arEvent, array(&$arOrder));
 }
+
+if(empty($SALE_CORRESPONDENCE['STRIPE_TEMPLATE']['VALUE'])) {
+	$SALE_CORRESPONDENCE['STRIPE_TEMPLATE']['VALUE'] = 'CUSTOM';
+}
+
+$fileTemplate = Dev2funModuleStripeClass::GetPathTemplate($SALE_CORRESPONDENCE['STRIPE_TEMPLATE']['VALUE']);
 
 if(isset($SALE_CORRESPONDENCE['LIVE_MODE']) && $SALE_CORRESPONDENCE['LIVE_MODE']['VALUE']=='Y'){
 	$secretKey = $SALE_CORRESPONDENCE['LIVE_SECRET_KEY']['VALUE'];
@@ -167,7 +172,7 @@ if($stripeSourceToken) {
 
 //		var_dump($charge); die();
 
-		if(in_array($charge->status,['succeeded','paid'])) {
+		if(in_array($charge->status,array('succeeded','paid','chargeable'))) {
 			$arFields = array(
 				"PAYED"=>"Y",
 				"DATE_PAYED" => Date(CDatabase::DateFormatToPHP(CLang::GetDateFormat("FULL", LANG))),
@@ -177,6 +182,8 @@ if($stripeSourceToken) {
 				"PS_CURRENCY" => $charge->currency,
 				"PS_STATUS " => "Y",
 			);
+			if(!empty($SALE_CORRESPONDENCE['PAYED_ORDER_STATUS']['VALUE']))
+				$arFields['STATUS_ID'] = $SALE_CORRESPONDENCE['PAYED_ORDER_STATUS']['VALUE'];
 			$events = GetModuleEvents("dev2fun.stripepayment", "OnBeforeUpdateOrder", true);
 			foreach ($events as $arEvent) {
 				ExecuteModuleEventEx($arEvent, array(&$arFields, $charge, $orderID));
@@ -195,14 +202,23 @@ if($stripeSourceToken) {
 						LocalRedirect($url);
 					}
 				}
-				echo $output;
+				if($fileTemplate && file_exists($fileTemplate)) {
+					include_once $fileTemplate.'/success.php';
+				} else {
+					echo $output;
+				}
 				return;
 			} else {
 				throw new Exception($APPLICATION->GetException());
 			}
 		} else {
 			if($charge->status=='pending') {
-				echo 'Pay is pending';
+				$output = 'Pay is pending';
+				if($fileTemplate && file_exists($fileTemplate)) {
+					include_once $fileTemplate.'/pending.php';
+				} else {
+					echo $output;
+				}
 				return;
 			}
 			throw new Exception('NO Pay! Please repeat.');
@@ -223,27 +239,16 @@ if($stripeSourceToken) {
 				LocalRedirect($url);
 			}
 		}
-//		echo $error;
+		if($fileTemplate && file_exists($fileTemplate)) {
+			include_once $fileTemplate.'/error.php';
+		} else {
+			echo $error;
+		}
 	}
 }
 
-//if($sourceToken = $request->get('source')) {
-//	\Stripe\Stripe::setApiKey("sk_test_4eC39HqLyjWDarjtT1zdp7dc");
-//
-//	$charge = \Stripe\Charge::create([
-//		"amount" => 1099,
-//		"currency" => "eur",
-//		"source" => $payToken,
-//	]);
-//}
-
-if(empty($SALE_CORRESPONDENCE['STRIPE_TEMPLATE']['VALUE'])) {
-	$SALE_CORRESPONDENCE['STRIPE_TEMPLATE']['VALUE'] = 'CUSTOM';
-}
-
-$fileTemplate = Dev2funModuleStripeClass::GetPathTemplate($SALE_CORRESPONDENCE['STRIPE_TEMPLATE']['VALUE']);
 if($fileTemplate && file_exists($fileTemplate)) {
-	include_once $fileTemplate;
+	include_once $fileTemplate.'/templates.php';
 } else {
 	ShowError('No template "'.$SALE_CORRESPONDENCE['STRIPE_TEMPLATE']['VALUE'].'"');
 }

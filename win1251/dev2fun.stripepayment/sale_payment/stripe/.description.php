@@ -1,12 +1,19 @@
-<? if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die(); ?><?
+<? if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /**
  * @author darkfriend <hi@darkfriend.ru>
  * @copyright (c) 2019, darkfriend
- * @version 1.1.0
+ * @version 1.2.0
  */
 
 \Bitrix\Main\Loader::includeModule('dev2fun.stripepayment');
+\Bitrix\Main\Loader::includeModule('sale');
 include(GetLangFileName(dirname(__FILE__) . "/", "/payment.php"));
+
+$obStatus = CSaleStatus::GetList();
+$arStatus = [];
+while ($statusItem = $obStatus->Fetch()) {
+	$arStatus[$statusItem['ID']] = $statusItem['NAME'];
+}
 
 $psTitle = GetMessage("STRIPE_TITLE");
 $psDescription = GetMessage("STRIPE_DDESCR");
@@ -31,7 +38,7 @@ $arPSCorrespondence = array(
 	"STRIPE_TEMPLATE" => array(
 		"NAME" => GetMessage("STRIPE_TEMPLATE_NAME"),
 		"DESCR" => GetMessage("STRIPE_TEMPLATE_DESCR"),
-		'SORT' => 200,
+		'SORT' => 150,
 		'GROUP' => 'GENERAL_SETTINGS',
 		'DEFAULT' => array(
 			'PROVIDER_VALUE' => 'POPUP',
@@ -40,6 +47,28 @@ $arPSCorrespondence = array(
 		'INPUT' => array(
 			'TYPE' => 'ENUM',
 			'OPTIONS' => $arTemplates,
+		)
+	),
+	"STRIPE_MODS" => array(
+		"NAME" => GetMessage('STRIPE_MODS_NAME'),
+		"DESCR" => GetMessage('STRIPE_MODS_DESCR'),
+		'SORT' => 160,
+		'GROUP' => 'GENERAL_SETTINGS',
+		"DEFAULT" => [
+			'PROVIDER_KEY' => 'VALUE',
+			'PROVIDER_VALUE' => implode(', ',array_keys($modeList)),
+		],
+		"TYPE" => "PROPERTY",
+	),
+	"PAYED_ORDER_STATUS" => array(
+		"NAME" => GetMessage("STRIPE_PAYED_ORDER_STATUS_NAME"),
+		"DESCR" => GetMessage("STRIPE_PAYED_ORDER_STATUS_DESCR"),
+		'SORT' => 170,
+		'GROUP' => 'GENERAL_SETTINGS',
+		'DEFAULT' => array(),
+		'INPUT' => array(
+			'TYPE' => 'ENUM',
+			'OPTIONS' => $arStatus,
 		)
 	),
 	"TEST_SECRET_KEY" => array(
@@ -74,7 +103,7 @@ $arPSCorrespondence = array(
 		"NAME" => GetMessage("STRIPE_SOURCE_WEBHOOK"),
 		"DESCR" => GetMessage("STRIPE_SOURCE_WEBHOOK_DESCR"),
 		"VALUE" => "",
-		'SORT' => 500,
+		'SORT' => 550,
 	),
 	"REDIRECT_SUCCESS" => array(
 		"NAME" => GetMessage("REDIRECT_SUCCESS"),

@@ -1,20 +1,41 @@
 <?php
 /**
- *
  * @author darkfriend <hi@darkfriend.ru>
- * @copyright (c) 2018, darkfriend
- * @version 1.0.1
- *
+ * @copyright (c) 2019, darkfriend
+ * @version 1.2.0
  */
 if(class_exists('Dev2funModuleStripeClass')) return;
 
 class Dev2funModuleStripeClass {
 	public static $module_id = 'dev2fun.stripepayment';
 	public static $arScanDir = array(
-		'/local/php_interface/sale_payment/stripe/templates',
-		'/bitrix/php_interface/sale_payment/stripe/templates',
+		'/local/php_interface/include/sale_payment/stripe/templates',
+		'/bitrix/php_interface/include/sale_payment/stripe/templates',
 		'/bitrix/modules/dev2fun.stripepayment/sale_payment/stripe/templates',
 	);
+
+	/**
+	 * Get modes for stripe
+	 * @return array
+	 */
+	public static function GetSupportModes() {
+		return array(
+			'card' => 'Card',
+			'sepa' => 'Sepa Debit',
+			'sofort' => 'Sofort',
+			'giropay' => 'Giropay',
+		);
+	}
+
+	/**
+	 * Get modes for stripe from string
+	 * @param string $strModes
+	 * @return array
+	 */
+	public static function GetModesByString($strModes) {
+		if(!$strModes) return array();
+		return explode(', ',$strModes);
+	}
 
 	/**
 	 * Get all templates
@@ -56,7 +77,7 @@ class Dev2funModuleStripeClass {
 			while ($dir=$d->read()) {
 				$dir = mb_strtolower($dir);
 				if(!in_array($dir,array('.','..')) && $dir==$template){
-					return $dirPath.'/'.$dir.'/templates.php';
+					return $dirPath.'/'.$dir;
 				}
 			}
 		}

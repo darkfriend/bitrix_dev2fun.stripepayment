@@ -170,7 +170,7 @@
           // handle result.error or result.source
           // console.log('handle');
           // console.log(result);
-          if(typeof result.error != 'undefined' && result.error.length>0) {
+          if(typeof result.source === 'undefined') {
             that.errors.push(result.error.message);
           } else {
             // console.log(result);
