@@ -1,8 +1,8 @@
 <?php
 /**
  * @author darkfriend <hi@darkfriend.ru>
- * @copyright (c) 2019, darkfriend
- * @version 1.3.0
+ * @copyright (c) 2020, darkfriend
+ * @version 1.3.2
  */
 if (class_exists('Dev2funModuleStripeClass')) return;
 
@@ -119,5 +119,25 @@ class Dev2funModuleStripeClass
         }
         $arUrl['query'] .= 'pay=' . $status . '&ORDER_ID=' . $orderId;
         return $arUrl['path'] . '?' . $arUrl['query'];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getSupportCurrencies()
+    {
+        return [
+            'USD', 'RUB', 'EUR', 'GBP', 'UAH',
+        ];
+    }
+
+    /**
+     * @param string $currency
+     * @return bool
+     */
+    public static function isSupportCurrency($currency)
+    {
+        $currency = \mb_strtoupper($currency);
+        return \in_array($currency, self::getSupportCurrencies());
     }
 }

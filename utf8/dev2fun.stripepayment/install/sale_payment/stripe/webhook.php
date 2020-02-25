@@ -1,8 +1,8 @@
 <?php
 /**
  * @author darkfriend <hi@darkfriend.ru>
- * @copyright (c) 2019, darkfriend
- * @version 1.3.0
+ * @copyright (c) 2020, darkfriend
+ * @version 1.3.2
  */
 require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
 
@@ -15,7 +15,7 @@ use \Bitrix\Sale\Order;
 $output = '';
 $paySystem = CSalePaySystem::GetList(
     array(),
-    array('PSA_NAME'=>'stripe','ACTIVE'=>'Y'),
+    array('PSA_NAME'=>'stripe'),
     false,
     false,
     array(
@@ -164,7 +164,7 @@ try {
     }
 
     http_response_code(200);
-    //	var_dump($event['data']['object']['status']);
+
 } catch(\UnexpectedValueException $e) {
     // Invalid payload
     http_response_code(400);

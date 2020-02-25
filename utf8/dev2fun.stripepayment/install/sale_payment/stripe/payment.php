@@ -1,8 +1,8 @@
 <?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /**
  * @author darkfriend <hi@darkfriend.ru>
- * @copyright (c) 2019, darkfriend
- * @version 1.3.0
+ * @copyright (c) 2020, darkfriend
+ * @version 1.3.2
  */
 
 use \Bitrix\Main\Application;
@@ -40,15 +40,19 @@ $arOrder = $order->getFieldValues();
 
 $sum = $arOrder['PRICE'];
 $sum = number_format($sum, 2, '.', '');
-if ($arOrder['CURRENCY'] != 'EUR') {
-    $arOrder['PRICE_EUR'] = CCurrencyRates::ConvertCurrency(
-        $arOrder['PRICE'],
-        $arOrder['CURRENCY'],
-        'EUR'
-    );
-} else {
-    $arOrder['PRICE_EUR'] = $arOrder['PRICE'];
+if(!Dev2funModuleStripeClass::isSupportCurrency($arOrder['CURRENCY'])) {
+    ShowError('Currency "'.$arOrder['CURRENCY'].'" is not support!');
+    return;
 }
+//if ($arOrder['CURRENCY'] != 'EUR') {
+//    $arOrder['PRICE_EUR'] = CCurrencyRates::ConvertCurrency(
+//        $arOrder['PRICE'],
+//        $arOrder['CURRENCY'],
+//        'EUR'
+//    );
+//} else {
+//    $arOrder['PRICE_EUR'] = $arOrder['PRICE'];
+//}
 
 if (empty($arOrder['PRICE_EUR'])) {
     $arOrder['PRICE_EUR'] = number_format($arOrder['PRICE'], 2, '.', '');
@@ -85,19 +89,20 @@ if (!empty($_REQUEST['sessionMode'])) {
             $product['QUANTITY'] = 1;
         }
 
-        if ($product['CURRENCY'] != 'EUR') {
-            $product['PRICE'] = CCurrencyRates::ConvertCurrency(
-                $product['PRICE'],
-                $product['CURRENCY'],
-                'EUR'
-            );
-        }
+//        if ($product['CURRENCY'] != 'EUR') {
+//            $product['PRICE'] = CCurrencyRates::ConvertCurrency(
+//                $product['PRICE'],
+//                $product['CURRENCY'],
+//                'EUR'
+//            );
+//        }
 
         if ($product['CUSTOM_PRICE'] == 'Y') {
             $arItems[] = [
                 'name' => $product['NAME'],
                 'amount' => number_format(($product['PRICE'] * 100), 0, '.', ''),
-                'currency' => 'eur',
+                'currency' => $basketItem['CURRENCY'],
+//                'currency' => 'eur',
                 'quantity' => $product['QUANTITY'],
             ];
             continue;
@@ -105,34 +110,49 @@ if (!empty($_REQUEST['sessionMode'])) {
 
         $rsElement = \CIBlockElement::GetByID($product['PRODUCT_ID'])->GetNextElement();
         //    $elementFields = $rsElement->GetFields();
-        $elementProps = $rsElement->GetProperties();
+//        $elementProps = $rsElement->GetProperties();
+        $elementFields = $rsElement->GetFields();
 
-        $elementPropsConcert = [];
-        if (!empty($elementProps['DATE_CONCERT']['VALUE'])) {
-            $rsElementHall = \CIBlockElement::GetByID($elementProps['DATE_CONCERT']['VALUE'])->GetNextElement();
-            if ($rsElementHall) {
-                $elementPropsConcert = $rsElementHall->GetProperties();
-            }
-        }
+//        $elementPropsConcert = [];
+//        if (!empty($elementProps['DATE_CONCERT']['VALUE'])) {
+//            $rsElementHall = \CIBlockElement::GetByID($elementProps['DATE_CONCERT']['VALUE'])->GetNextElement();
+//            if ($rsElementHall) {
+//                $elementPropsConcert = $rsElementHall->GetProperties();
+//            }
+//        }
 
         $pictureUrl = '';
-        if (!empty($elementPropsConcert['CONCERT']['VALUE'])) {
-            $rsElementHall = \CIBlockElement::GetByID($elementPropsConcert['CONCERT']['VALUE'])->GetNextElement();
-            if ($rsElementHall) {
-                $elementConcert = $rsElementHall->GetFields();
-                if (empty($elementConcert['PREVIEW_PICTURE'])) {
-                    $pictureUrl = (CMain::IsHTTPS() ? 'https' : 'http')
-                        . '://'
-                        . SITE_SERVER_NAME
-                        . CFile::GetPath($elementConcert['PREVIEW_PICTURE']);
-                }
-            }
+        if (!empty($elementFields['PREVIEW_PICTURE'])) {
+            $pictureUrl = (CMain::IsHTTPS() ? 'https' : 'http')
+                . '://'
+                . SITE_SERVER_NAME
+                . CFile::GetPath($elementFields['PREVIEW_PICTURE']);
+        } elseif (!empty($elementFields['DETAIL_PICTURE'])) {
+            $pictureUrl = (CMain::IsHTTPS() ? 'https' : 'http')
+                . '://'
+                . SITE_SERVER_NAME
+                . CFile::GetPath($elementFields['DETAIL_PICTURE']);
         }
+
+//        $pictureUrl = '';
+//        if (!empty($elementPropsConcert['CONCERT']['VALUE'])) {
+//            $rsElementHall = \CIBlockElement::GetByID($elementPropsConcert['CONCERT']['VALUE'])->GetNextElement();
+//            if ($rsElementHall) {
+//                $elementConcert = $rsElementHall->GetFields();
+//                if (empty($elementConcert['PREVIEW_PICTURE'])) {
+//                    $pictureUrl = (CMain::IsHTTPS() ? 'https' : 'http')
+//                        . '://'
+//                        . SITE_SERVER_NAME
+//                        . CFile::GetPath($elementConcert['PREVIEW_PICTURE']);
+//                }
+//            }
+//        }
 
         $item = [
             'name' => $product['NAME'],
             'amount' => number_format(($product['PRICE'] * 100), 0, '.', ''),
-            'currency' => 'eur',
+            'currency' => $product['CURRENCY'],
+//            'currency' => 'eur',
             'quantity' => $product['QUANTITY'],
         ];
 
@@ -143,12 +163,13 @@ if (!empty($_REQUEST['sessionMode'])) {
         $arItems[] = $item;
     }
 
-    $deliveryPrice = $order->getDeliveryPrice();
+    $deliveryPrice = floatval($order->getDeliveryPrice());
     if($deliveryPrice) {
         $arItems[] = [
-            'name' => 'Доставка',
+            'name' => 'Delivery',
             'amount' => number_format(($deliveryPrice * 100), 0, '.', ''),
-            'currency' => 'eur',
+            'currency' => $arOrder['CURRENCY'],
+//            'currency' => 'eur',
             'quantity' => 1,
         ];
     }
@@ -194,4 +215,3 @@ if ($fileTemplate && file_exists($fileTemplate)) {
 } else {
     ShowError('No template "' . $SALE_CORRESPONDENCE['STRIPE_TEMPLATE']['VALUE'] . '"');
 }
-?>
