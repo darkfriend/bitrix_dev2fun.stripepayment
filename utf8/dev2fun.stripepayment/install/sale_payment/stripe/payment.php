@@ -2,7 +2,7 @@
 /**
  * @author darkfriend <hi@darkfriend.ru>
  * @copyright (c) 2020, darkfriend
- * @version 1.3.2
+ * @version 1.3.4
  */
 
 use \Bitrix\Main\Application;
@@ -28,6 +28,9 @@ $orderId = isset($_REQUEST[$orderKey]) ? $_REQUEST[$orderKey] : null;
 if (!$orderId) $orderId = $request->get('ORDER_ID');
 if (!$orderId) $orderId = $request->get('ID');
 if (!$orderId) $orderId = $request->getPost('accountNumber');
+if (!$orderId) {
+    $orderId = \IntVal($GLOBALS["SALE_INPUT_PARAMS"]["ORDER"]["ID"]);
+}
 
 if(!$orderId) {
     ShowError('Order Id is not found!');
@@ -39,7 +42,7 @@ $order = Order::load($orderId);
 $arOrder = $order->getFieldValues();
 
 $sum = $arOrder['PRICE'];
-$sum = number_format($sum, 2, '.', '');
+$sum = \number_format($sum, 2, '.', '');
 if(!Dev2funModuleStripeClass::isSupportCurrency($arOrder['CURRENCY'])) {
     ShowError('Currency "'.$arOrder['CURRENCY'].'" is not support!');
     return;
@@ -55,7 +58,7 @@ if(!Dev2funModuleStripeClass::isSupportCurrency($arOrder['CURRENCY'])) {
 //}
 
 if (empty($arOrder['PRICE_EUR'])) {
-    $arOrder['PRICE_EUR'] = number_format($arOrder['PRICE'], 2, '.', '');
+    $arOrder['PRICE_EUR'] = \number_format($arOrder['PRICE'], 2, '.', '');
 }
 
 $orderID = $order->getId();
@@ -100,10 +103,10 @@ if (!empty($_REQUEST['sessionMode'])) {
         if ($product['CUSTOM_PRICE'] == 'Y') {
             $arItems[] = [
                 'name' => $product['NAME'],
-                'amount' => number_format(($product['PRICE'] * 100), 0, '.', ''),
+                'amount' => \number_format(($product['PRICE'] * 100), 0, '.', ''),
                 'currency' => $basketItem['CURRENCY'],
 //                'currency' => 'eur',
-                'quantity' => $product['QUANTITY'],
+                'quantity' => (int) $product['QUANTITY'],
             ];
             continue;
         }
@@ -150,10 +153,10 @@ if (!empty($_REQUEST['sessionMode'])) {
 
         $item = [
             'name' => $product['NAME'],
-            'amount' => number_format(($product['PRICE'] * 100), 0, '.', ''),
+            'amount' => \number_format(($product['PRICE'] * 100), 0, '.', ''),
             'currency' => $product['CURRENCY'],
 //            'currency' => 'eur',
-            'quantity' => $product['QUANTITY'],
+            'quantity' => (int) $product['QUANTITY'],
         ];
 
         if ($pictureUrl) {
@@ -163,11 +166,11 @@ if (!empty($_REQUEST['sessionMode'])) {
         $arItems[] = $item;
     }
 
-    $deliveryPrice = floatval($order->getDeliveryPrice());
+    $deliveryPrice = \floatval($order->getDeliveryPrice());
     if($deliveryPrice) {
         $arItems[] = [
             'name' => 'Delivery',
-            'amount' => number_format(($deliveryPrice * 100), 0, '.', ''),
+            'amount' => \number_format(($deliveryPrice * 100), 0, '.', ''),
             'currency' => $arOrder['CURRENCY'],
 //            'currency' => 'eur',
             'quantity' => 1,
@@ -198,11 +201,16 @@ if (!empty($_REQUEST['sessionMode'])) {
         'cancel_url' => $finalUrl . '/pay-error/',
     ]);
 
-    header('Content-Type: application/json');
-    ob_end_clean();
-    ob_end_flush();
-    ob_clean();
-    die(json_encode($session));
+    $APPLICATION->RestartBuffer();
+    \header('Content-Type: application/json');
+    echo \json_encode($session->toArray());
+    die();
+
+//    header('Content-Type: application/json');
+//    ob_end_clean();
+//    ob_end_flush();
+//    ob_clean();
+//    die(json_encode($session));
 }
 
 $fileTemplate = Dev2funModuleStripeClass::GetPathTemplate($SALE_CORRESPONDENCE['STRIPE_TEMPLATE']['VALUE']);
