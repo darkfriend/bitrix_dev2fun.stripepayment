@@ -4,6 +4,10 @@
         <button type="button" @click.prevent="clickBuy">
             {{locale.submitButton}}
         </button>
+        <p v-if="error.length" style="color: #920a0a">
+            <br>
+            Error: {{error}}
+        </p>
     </div>
 </template>
 
@@ -42,7 +46,8 @@
                 // stripeCard : {},
                 // stripeToken : '',
                 // submitEnabled : false,
-                errors: []
+                errors: [],
+                error: '',
             };
         },
         computed: {
@@ -61,6 +66,11 @@
             },
             async sendClickBuy() {
                 let session = await this.getSessionId();
+                if(typeof session === "object" && typeof session.error !== "undefined") {
+                    console.warn(session);
+                    this.error = session.error;
+                    return;
+                }
                 if (!session) return;
                 const stripe = Stripe(this.stripeKey);
                 stripe.redirectToCheckout({

@@ -2,7 +2,7 @@
 /**
  * @author darkfriend <hi@darkfriend.ru>
  * @copyright (c) 2020, darkfriend
- * @version 1.3.4
+ * @version 1.3.5
  */
 
 use \Bitrix\Main\Application;
@@ -184,26 +184,40 @@ if (!empty($_REQUEST['sessionMode'])) {
 
     $finalUrl = (CMain::IsHTTPS() ? 'https' : 'http') . '://' . SITE_SERVER_NAME;
 
-    $customer = \Stripe\Customer::create([
-        "name" => "Customer for #$orderId",
-        "description" => "Customer for #$orderId",
-        "email" => $USER->GetEmail(),
-        'metadata' => [
-            'orderId' => $orderId,
-        ],
-    ]);
+    $response = [];
+    try {
+        $customer = \Stripe\Customer::create([
+            "name" => "Customer for #$orderId",
+            "description" => "Customer for #$orderId",
+            "email" => $USER->GetEmail(),
+            'metadata' => [
+                'orderId' => $orderId,
+            ],
+        ]);
 
-    $session = \Stripe\Checkout\Session::create([
-        'payment_method_types' => ['card'],
-        'line_items' => $arItems,
-        'customer' => $customer->id,
-        'success_url' => $finalUrl . '/pay-success/',
-        'cancel_url' => $finalUrl . '/pay-error/',
-    ]);
+        $session = \Stripe\Checkout\Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => $arItems,
+            'customer' => $customer->id,
+            'success_url' => $finalUrl . '/pay-success/',
+            'cancel_url' => $finalUrl . '/pay-error/',
+        ]);
+
+        $response = $session->toArray();
+    } catch (\Throwable $e) {
+        $response = [
+            'error' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+        ];
+    }
 
     $APPLICATION->RestartBuffer();
+    \ob_end_clean();
+    \ob_end_flush();
+    \ob_clean();
     \header('Content-Type: application/json');
-    echo \json_encode($session->toArray());
+    echo \json_encode($response);
     die();
 
 //    header('Content-Type: application/json');
