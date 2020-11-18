@@ -2,7 +2,7 @@
 /**
  * @author darkfriend <hi@darkfriend.ru>
  * @copyright (c) 2020, darkfriend
- * @version 1.3.2
+ * @version 1.3.6
  */
 require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
 
@@ -14,18 +14,18 @@ use \Bitrix\Sale\Order;
 
 $output = '';
 $paySystem = CSalePaySystem::GetList(
-    array(),
-    array('PSA_NAME'=>'stripe'),
+    [],
+    ['PSA_NAME' => ['stripe','stripe2']],
     false,
     false,
-    array(
+    [
         'ID', 'NAME', 'ACTIVE', 'PSA_PARAMS', 'PSA_ID', 'PSA_HAVE_PREPAY',
         'PSA_NAME', 'PSA_ACTION_FILE', 'PSA_RESULT_FILE'
-    )
+    ]
 )->Fetch();
 
 if(!empty($paySystem['PSA_PARAMS'])) {
-    $paySystem['PSA_PARAMS'] = unserialize($paySystem['PSA_PARAMS']);
+    $paySystem['PSA_PARAMS'] = \unserialize($paySystem['PSA_PARAMS']);
 }
 
 //global $SALE_CORRESPONDENCE, $USER, $APPLICATION;
@@ -49,7 +49,7 @@ if(isset($paySystem['PSA_PARAMS']['LIVE_MODE']) && $paySystem['PSA_PARAMS']['LIV
     $publishKey = $paySystem['PSA_PARAMS']['TEST_PUBLISH_KEY']['VALUE'];
 }
 
-$payload = @file_get_contents('php://input');
+$payload = @\file_get_contents('php://input');
 
 $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
 $event = null;
@@ -73,10 +73,10 @@ try {
     );
     $charge = $event['data']['object'];
 
-    if(in_array($event['type'], [
+    if(\in_array($event['type'], [
         'checkout.session.completed',
         'source.chargeable',
-        'charge.succeeded',
+//        'charge.succeeded',
     ])) {
 
         if($event['type']=='source.chargeable') {
@@ -85,10 +85,10 @@ try {
                 'currency' => $charge['currency'],
                 'source' => $charge['id'],
             ]);
-            http_response_code(200);
+            \http_response_code(200);
             //      var_dump($finalCharge);
-            if(is_string($finalCharge)) {
-                http_response_code(580);
+            if(\is_string($finalCharge)) {
+                \http_response_code(580);
                 die($finalCharge);
             }
             if($charge['type']!='sofort') {
@@ -163,18 +163,18 @@ try {
         }
     }
 
-    http_response_code(200);
+    \http_response_code(200);
 
 } catch(\UnexpectedValueException $e) {
     // Invalid payload
-    http_response_code(400);
+    \http_response_code(400);
     $output = $e->getMessage();
 } catch(\Stripe\Error\SignatureVerification $e) {
     // Invalid signature
-    http_response_code(400);
+    \http_response_code(400);
     $output = $e->getMessage();
 } catch (\Exception $e) {
-    http_response_code(400);
+    \http_response_code(400);
     $output = $e->getMessage();
 }
 

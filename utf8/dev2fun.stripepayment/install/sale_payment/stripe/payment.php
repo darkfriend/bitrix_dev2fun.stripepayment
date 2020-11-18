@@ -2,7 +2,7 @@
 /**
  * @author darkfriend <hi@darkfriend.ru>
  * @copyright (c) 2020, darkfriend
- * @version 1.3.5
+ * @version 1.3.6
  */
 
 use \Bitrix\Main\Application;
@@ -172,7 +172,6 @@ if (!empty($_REQUEST['sessionMode'])) {
             'name' => 'Delivery',
             'amount' => \number_format(($deliveryPrice * 100), 0, '.', ''),
             'currency' => $arOrder['CURRENCY'],
-//            'currency' => 'eur',
             'quantity' => 1,
         ];
     }
@@ -201,6 +200,9 @@ if (!empty($_REQUEST['sessionMode'])) {
             'customer' => $customer->id,
             'success_url' => $finalUrl . '/pay-success/',
             'cancel_url' => $finalUrl . '/pay-error/',
+            'metadata' => [
+                'orderId' => $orderId,
+            ],
         ]);
 
         $response = $session->toArray();
