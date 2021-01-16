@@ -21,3 +21,6 @@ $MESS["STRIPE_SOURCE_WEBHOOK_DESCR"]="Enter Webhook-token.";
 
 $MESS["REDIRECT_FAIL"]="Page after fail payed";
 $MESS["REDIRECT_FAIL_DESCR"]="Enter url redirect. System add pay=success&ORDER_ID=#ID#";
+
+$MESS["URL_TO_PAYMENT"]="URL to page payment";
+$MESS["URL_TO_PAYMENT_DESCR"]="Enter url to page payment or leave blank";

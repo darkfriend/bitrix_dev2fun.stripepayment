@@ -21,3 +21,6 @@ $MESS["STRIPE_SOURCE_WEBHOOK_DESCR"]="Вам нужно указать Webhook-t
 
 $MESS["REDIRECT_FAIL"]="Страница при ошибке во время оплаты";
 $MESS["REDIRECT_FAIL_DESCR"]="Укажите ссылку на страницу при ошибке оплаты. К ссылке будет добавлено pay=fail&ORDER_ID=#ID#";
+
+$MESS["URL_TO_PAYMENT"]="Ссылка до страницы оплат";
+$MESS["URL_TO_PAYMENT_DESCR"]="Укажите путь до страницы оплат или оставьте пустым";

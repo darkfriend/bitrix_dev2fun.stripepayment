@@ -2,7 +2,7 @@
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /**
  * @author darkfriend <hi@darkfriend.ru>
- * @version 1.3.0
+ * @version 1.3.7
  */
 $locale = [
     'card' => [
@@ -57,11 +57,17 @@ foreach ($stripeMods as &$stripeMod) {
 unset($stripeMod);
 
 $finalUrl = (CMain::IsHTTPS() ? 'https' : 'http') . '://' . SITE_SERVER_NAME;
+
+if(!empty($SALE_CORRESPONDENCE['URL_TO_PAYMENT']['VALUE'])) {
+    $sessionUrl = $SALE_CORRESPONDENCE['URL_TO_PAYMENT']['VALUE'];
+} else {
+    $sessionUrl = $APPLICATION->GetCurDir();
+}
 ?>
 <script type="text/javascript" src="https://js.stripe.com/v3/"></script>
 <div id="cardVue">
     <form-stripe
-        :session-url="'<?= $APPLICATION->GetCurDir(); ?>?ORDER_ID=<?= $orderID ?>&sessionMode=1'"
+        :session-url="'<?= $sessionUrl ?>?ORDER_ID=<?= $orderID ?>&sessionMode=1'"
         :stripe-key="'<?= $publishKey ?>'"
         :currency="'<?= mb_strtolower($arOrder['CURRENCY']) ?>'"
         :currency-eur="'eur'"

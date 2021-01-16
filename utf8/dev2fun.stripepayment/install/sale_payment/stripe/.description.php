@@ -1,8 +1,8 @@
-<? if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
+<?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /**
  * @author darkfriend <hi@darkfriend.ru>
  * @copyright (c) 2019, darkfriend
- * @version 1.3.0
+ * @version 1.3.7
  */
 
 \Bitrix\Main\Loader::includeModule('dev2fun.stripepayment');
@@ -123,6 +123,13 @@ $arPSCorrespondence = array(
             'PROVIDER_KEY' => 'VALUE',
             'PROVIDER_VALUE' => 'ORDER_ID',
         ],
+        "TYPE" => "PROPERTY",
+    ),
+    "URL_TO_PAYMENT" => array(
+        "NAME" => \Bitrix\Main\Localization\Loc::getMessage("URL_TO_PAYMENT"),
+        "DESCR" => \Bitrix\Main\Localization\Loc::getMessage("URL_TO_PAYMENT_DESCR"),
+        "VALUE" => "",
+        'SORT' => 900,
         "TYPE" => "PROPERTY",
     ),
 );

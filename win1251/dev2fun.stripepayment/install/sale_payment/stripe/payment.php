@@ -1,8 +1,8 @@
 <?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /**
  * @author darkfriend <hi@darkfriend.ru>
- * @copyright (c) 2020, darkfriend
- * @version 1.3.6
+ * @copyright (c) 2019-2021, darkfriend
+ * @version 1.3.7
  */
 
 use \Bitrix\Main\Application;
@@ -112,8 +112,15 @@ if (!empty($_REQUEST['sessionMode'])) {
         }
 
         $rsElement = \CIBlockElement::GetByID($product['PRODUCT_ID'])->GetNextElement();
-        //    $elementFields = $rsElement->GetFields();
-//        $elementProps = $rsElement->GetProperties();
+        if(!$rsElement) {
+            $arItems[] = [
+                'name' => $product['NAME'],
+                'amount' => \number_format(($product['PRICE'] * 100), 0, '.', ''),
+                'currency' => $product['CURRENCY'],
+                'quantity' => (int) $product['QUANTITY'],
+            ];
+            continue;
+        }
         $elementFields = $rsElement->GetFields();
 
 //        $elementPropsConcert = [];
