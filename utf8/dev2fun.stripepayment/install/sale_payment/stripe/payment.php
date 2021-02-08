@@ -2,7 +2,7 @@
 /**
  * @author darkfriend <hi@darkfriend.ru>
  * @copyright (c) 2019-2021, darkfriend
- * @version 1.3.7
+ * @version 1.3.8
  */
 
 use \Bitrix\Main\Application;
@@ -57,9 +57,9 @@ if(!Dev2funModuleStripeClass::isSupportCurrency($arOrder['CURRENCY'])) {
 //    $arOrder['PRICE_EUR'] = $arOrder['PRICE'];
 //}
 
-if (empty($arOrder['PRICE_EUR'])) {
-    $arOrder['PRICE_EUR'] = \number_format($arOrder['PRICE'], 2, '.', '');
-}
+//if (empty($arOrder['PRICE_EUR'])) {
+//    $arOrder['PRICE_EUR'] = \number_format($arOrder['PRICE'], 2, '.', '');
+//}
 
 $orderID = $order->getId();
 
