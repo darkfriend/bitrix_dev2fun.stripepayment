@@ -2,7 +2,7 @@
 /**
  * @author darkfriend <hi@darkfriend.ru>
  * @copyright (c) 2019-2021, darkfriend
- * @version 1.3.8
+ * @version 1.3.9
  */
 
 use \Bitrix\Main\Application;
@@ -100,7 +100,7 @@ if (!empty($_REQUEST['sessionMode'])) {
 //            );
 //        }
 
-        if ($product['CUSTOM_PRICE'] == 'Y') {
+        if ($product['CUSTOM_PRICE'] === 'Y') {
             $arItems[] = [
                 'name' => $product['NAME'],
                 'amount' => \number_format(($product['PRICE'] * 100), 0, '.', ''),
@@ -173,11 +173,20 @@ if (!empty($_REQUEST['sessionMode'])) {
         $arItems[] = $item;
     }
 
-    $deliveryPrice = \floatval($order->getDeliveryPrice());
+    $deliveryPrice = (float)$order->getDeliveryPrice();
     if($deliveryPrice) {
         $arItems[] = [
             'name' => 'Delivery',
             'amount' => \number_format(($deliveryPrice * 100), 0, '.', ''),
+            'currency' => $arOrder['CURRENCY'],
+            'quantity' => 1,
+        ];
+    }
+
+    if(!empty($arOrder['TAX_VALUE'])) {
+        $arItems[] = [
+            'name' => 'TAX',
+            'amount' => \number_format(($arOrder['TAX_VALUE'] * 100), 0, '.', ''),
             'currency' => $arOrder['CURRENCY'],
             'quantity' => 1,
         ];
