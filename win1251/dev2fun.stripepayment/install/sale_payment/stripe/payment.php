@@ -2,7 +2,7 @@
 /**
  * @author darkfriend <hi@darkfriend.ru>
  * @copyright (c) 2019-2021, darkfriend
- * @version 1.3.9
+ * @version 1.3.10
  */
 
 use \Bitrix\Main\Application;
@@ -104,8 +104,7 @@ if (!empty($_REQUEST['sessionMode'])) {
             $arItems[] = [
                 'name' => $product['NAME'],
                 'amount' => \number_format(($product['PRICE'] * 100), 0, '.', ''),
-                'currency' => $basketItem['CURRENCY'],
-//                'currency' => 'eur',
+                'currency' => $product['CURRENCY'],
                 'quantity' => (int) $product['QUANTITY'],
             ];
             continue;
@@ -123,14 +122,6 @@ if (!empty($_REQUEST['sessionMode'])) {
         }
         $elementFields = $rsElement->GetFields();
 
-//        $elementPropsConcert = [];
-//        if (!empty($elementProps['DATE_CONCERT']['VALUE'])) {
-//            $rsElementHall = \CIBlockElement::GetByID($elementProps['DATE_CONCERT']['VALUE'])->GetNextElement();
-//            if ($rsElementHall) {
-//                $elementPropsConcert = $rsElementHall->GetProperties();
-//            }
-//        }
-
         $pictureUrl = '';
         if (!empty($elementFields['PREVIEW_PICTURE'])) {
             $pictureUrl = (CMain::IsHTTPS() ? 'https' : 'http')
@@ -144,25 +135,10 @@ if (!empty($_REQUEST['sessionMode'])) {
                 . CFile::GetPath($elementFields['DETAIL_PICTURE']);
         }
 
-//        $pictureUrl = '';
-//        if (!empty($elementPropsConcert['CONCERT']['VALUE'])) {
-//            $rsElementHall = \CIBlockElement::GetByID($elementPropsConcert['CONCERT']['VALUE'])->GetNextElement();
-//            if ($rsElementHall) {
-//                $elementConcert = $rsElementHall->GetFields();
-//                if (empty($elementConcert['PREVIEW_PICTURE'])) {
-//                    $pictureUrl = (CMain::IsHTTPS() ? 'https' : 'http')
-//                        . '://'
-//                        . SITE_SERVER_NAME
-//                        . CFile::GetPath($elementConcert['PREVIEW_PICTURE']);
-//                }
-//            }
-//        }
-
         $item = [
             'name' => $product['NAME'],
             'amount' => \number_format(($product['PRICE'] * 100), 0, '.', ''),
             'currency' => $product['CURRENCY'],
-//            'currency' => 'eur',
             'quantity' => (int) $product['QUANTITY'],
         ];
 
@@ -237,12 +213,6 @@ if (!empty($_REQUEST['sessionMode'])) {
     \header('Content-Type: application/json');
     echo \json_encode($response);
     die();
-
-//    header('Content-Type: application/json');
-//    ob_end_clean();
-//    ob_end_flush();
-//    ob_clean();
-//    die(json_encode($session));
 }
 
 $fileTemplate = Dev2funModuleStripeClass::GetPathTemplate($SALE_CORRESPONDENCE['STRIPE_TEMPLATE']['VALUE']);
