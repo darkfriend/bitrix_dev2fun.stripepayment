@@ -1,8 +1,8 @@
 <?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /**
  * @author darkfriend <hi@darkfriend.ru>
- * @copyright (c) 2019-2021, darkfriend
- * @version 1.3.10
+ * @copyright (c) 2019-2022, darkfriend
+ * @version 1.3.11
  */
 
 use \Bitrix\Main\Application;
@@ -215,13 +215,19 @@ if (!empty($_REQUEST['sessionMode'])) {
     die();
 }
 
+if(empty($SALE_CORRESPONDENCE['STRIPE_TEMPLATE']['VALUE'])) {
+    $fileTemplate = 'custom';
+} else {
+    $fileTemplate = $SALE_CORRESPONDENCE['STRIPE_TEMPLATE']['VALUE'];
+}
+
 $fileTemplate = Dev2funModuleStripeClass::GetPathTemplate($SALE_CORRESPONDENCE['STRIPE_TEMPLATE']['VALUE']);
+$fileTemplate .= '/templates.php';
 
 $error = false;
 
-$fileTemplate = __DIR__ . '/templates/custom';
 if ($fileTemplate && file_exists($fileTemplate)) {
-    include_once $fileTemplate . '/templates.php';
+    include $fileTemplate;
 } else {
     ShowError('No template "' . $SALE_CORRESPONDENCE['STRIPE_TEMPLATE']['VALUE'] . '"');
 }
