@@ -1,8 +1,8 @@
 <?php
 /**
  * @author darkfriend <hi@darkfriend.ru>
- * @copyright (c) 2020, darkfriend
- * @version 1.3.6
+ * @copyright (c) 2020-2022, darkfriend
+ * @version 1.3.12
  */
 require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
 
@@ -15,7 +15,7 @@ use \Bitrix\Sale\Order;
 $output = '';
 $paySystem = CSalePaySystem::GetList(
     [],
-    ['PSA_NAME' => ['stripe','stripe2']],
+    ['NAME' => ['stripe', 'stripe2', 'Stripe']],
     false,
     false,
     [
@@ -24,39 +24,37 @@ $paySystem = CSalePaySystem::GetList(
     ]
 )->Fetch();
 
-if(!empty($paySystem['PSA_PARAMS'])) {
-    $paySystem['PSA_PARAMS'] = \unserialize($paySystem['PSA_PARAMS']);
-}
-
-//global $SALE_CORRESPONDENCE, $USER, $APPLICATION;
-//\Bitrix\Main\Loader::registerAutoLoadClasses(
-//    "dev2fun.stripepayment",
-//    array(
-//        'dev2fun\StripeHelper' => 'sale_payment/stripe/lib/StripeHelper.php',
-//    )
-//);
-
-\Bitrix\Main\Loader::includeModule('dev2fun.stripepayment');
-$request = Application::getInstance()->getContext()->getRequest();
-
-include __DIR__ . '/vendor/autoload.php';
-
-if(isset($paySystem['PSA_PARAMS']['LIVE_MODE']) && $paySystem['PSA_PARAMS']['LIVE_MODE']['VALUE']=='Y') {
-    $secretKey = $paySystem['PSA_PARAMS']['LIVE_SECRET_KEY']['VALUE'];
-    $publishKey = $paySystem['PSA_PARAMS']['LIVE_PUBLISH_KEY']['VALUE'];
-} else {
-    $secretKey = $paySystem['PSA_PARAMS']['TEST_SECRET_KEY']['VALUE'];
-    $publishKey = $paySystem['PSA_PARAMS']['TEST_PUBLISH_KEY']['VALUE'];
-}
-
-$payload = @\file_get_contents('php://input');
-
-$sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
-$event = null;
-
 try {
 
-    if(empty($paySystem['PSA_PARAMS']['SOURCE_WEBHOOK']['VALUE'])) {
+    if(empty($paySystem)) {
+        throw new ErrorException('Stripe not found. Please set "Stripe" for field with "NAME"');
+    }
+
+    if(!empty($paySystem['PSA_PARAMS'])) {
+        $paySystem['PSA_PARAMS'] = \unserialize($paySystem['PSA_PARAMS']);
+    }
+
+    \Bitrix\Main\Loader::includeModule('dev2fun.stripepayment');
+    $request = Application::getInstance()->getContext()->getRequest();
+
+    include __DIR__ . '/vendor/autoload.php';
+
+    if(isset($paySystem['PSA_PARAMS']['LIVE_MODE']) && $paySystem['PSA_PARAMS']['LIVE_MODE']['VALUE']==='Y') {
+        $secretKey = $paySystem['PSA_PARAMS']['LIVE_SECRET_KEY']['VALUE'];
+        $publishKey = $paySystem['PSA_PARAMS']['LIVE_PUBLISH_KEY']['VALUE'];
+        $webhookToken = $paySystem['PSA_PARAMS']['SOURCE_WEBHOOK']['VALUE'];
+    } else {
+        $secretKey = $paySystem['PSA_PARAMS']['TEST_SECRET_KEY']['VALUE'];
+        $publishKey = $paySystem['PSA_PARAMS']['TEST_PUBLISH_KEY']['VALUE'];
+        $webhookToken = $paySystem['PSA_PARAMS']['TEST_SOURCE_WEBHOOK']['VALUE'];
+    }
+
+    $payload = @\file_get_contents('php://input');
+
+    $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+    $event = null;
+
+    if(empty($webhookToken)) {
         throw new \Exception('Webhook token is not found!');
     }
 
@@ -64,12 +62,8 @@ try {
     // See your keys here: https://dashboard.stripe.com/account/apikeys
     \Stripe\Stripe::setApiKey($secretKey);
 
-    // You can find your endpoint's secret in your webhook settings
-    $endpoint_secret = $paySystem['PSA_PARAMS']['SOURCE_WEBHOOK']['VALUE'];
-    //  $endpoint_secret = 'whsec_E7d7V75TZstGzt7wuQYu1Gm5YgMWD8Pc';
-
     $event = \Stripe\Webhook::constructEvent(
-        $payload, $sig_header, $endpoint_secret
+        $payload, $sig_header, $webhookToken
     );
     $charge = $event['data']['object'];
 
@@ -156,7 +150,9 @@ try {
             }
             if(!empty($SALE_CORRESPONDENCE['REDIRECT_SUCCESS']['VALUE'])){
                 $url = Dev2funModuleStripeClass::GetRedurectUrl($SALE_CORRESPONDENCE['REDIRECT_SUCCESS']['VALUE'],$orderId,'success');
-                if($url) LocalRedirect($url);
+                if($url) {
+                    LocalRedirect($url);
+                }
             }
         } else {
             throw new Exception($APPLICATION->GetException());

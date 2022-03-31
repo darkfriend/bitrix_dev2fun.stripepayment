@@ -1,8 +1,8 @@
 <?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /**
  * @author darkfriend <hi@darkfriend.ru>
- * @copyright (c) 2019, darkfriend
- * @version 1.3.7
+ * @copyright (c) 2019-2022, darkfriend
+ * @version 1.3.12
  */
 
 \Bitrix\Main\Loader::includeModule('dev2fun.stripepayment');
@@ -79,6 +79,12 @@ $arPSCorrespondence = array(
         "VALUE" => "",
         'SORT' => 300,
         "TYPE" => "ORDER"
+    ),
+    "TEST_SOURCE_WEBHOOK" => array(
+        "NAME" => \Bitrix\Main\Localization\Loc::getMessage("STRIPE_TEST_SOURCE_WEBHOOK"),
+        "DESCR" => \Bitrix\Main\Localization\Loc::getMessage("STRIPE_TEST_SOURCE_WEBHOOK_DESCR"),
+        "VALUE" => "",
+        'SORT' => 550,
     ),
     "LIVE_SECRET_KEY" => array(
         "NAME" => \Bitrix\Main\Localization\Loc::getMessage("LIVE_SECRET_KEY"),

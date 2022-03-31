@@ -2,7 +2,7 @@
 /**
  * @author darkfriend <hi@darkfriend.ru>
  * @copyright (c) 2019-2022, darkfriend
- * @version 1.3.11
+ * @version 1.3.12
  */
 
 use \Bitrix\Main\Application;
@@ -173,8 +173,6 @@ if (!empty($_REQUEST['sessionMode'])) {
         ExecuteModuleEventEx($arEvent, array(&$arItems));
     }
 
-    $finalUrl = (CMain::IsHTTPS() ? 'https' : 'http') . '://' . SITE_SERVER_NAME;
-
     $response = [];
     try {
         $customer = \Stripe\Customer::create([
@@ -186,12 +184,32 @@ if (!empty($_REQUEST['sessionMode'])) {
             ],
         ]);
 
+        $finalUrl = (CMain::IsHTTPS() ? 'https' : 'http') . '://' . SITE_SERVER_NAME;
+
+        if(!empty($SALE_CORRESPONDENCE['REDIRECT_SUCCESS']['VALUE'])) {
+            $successUrl = $SALE_CORRESPONDENCE['REDIRECT_SUCCESS']['VALUE'];
+            if(strpos($successUrl, '/') === 0) {
+                $successUrl = $finalUrl . $successUrl;
+            }
+        } else {
+            $successUrl = $finalUrl . '/pay-success/';
+        }
+
+        if(!empty($SALE_CORRESPONDENCE['REDIRECT_FAIL']['VALUE'])) {
+            $failUrl = $SALE_CORRESPONDENCE['REDIRECT_FAIL']['VALUE'];
+            if(strpos($failUrl, '/') === 0) {
+                $failUrl = $finalUrl . $failUrl;
+            }
+        } else {
+            $failUrl = $finalUrl . '/pay-error/';
+        }
+
         $session = \Stripe\Checkout\Session::create([
             'payment_method_types' => ['card'],
             'line_items' => $arItems,
             'customer' => $customer->id,
-            'success_url' => $finalUrl . '/pay-success/',
-            'cancel_url' => $finalUrl . '/pay-error/',
+            'success_url' => $successUrl,
+            'cancel_url' => $failUrl,
             'metadata' => [
                 'orderId' => $orderId,
             ],
