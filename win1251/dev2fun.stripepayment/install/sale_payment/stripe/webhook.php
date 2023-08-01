@@ -31,7 +31,7 @@ try {
     }
 
     if(!empty($paySystem['PSA_PARAMS'])) {
-        $paySystem['PSA_PARAMS'] = \unserialize($paySystem['PSA_PARAMS']);
+        $paySystem['PSA_PARAMS'] = \unserialize($paySystem['PSA_PARAMS'], ['allowed_classes' => false]);
     }
 
     \Bitrix\Main\Loader::includeModule('dev2fun.stripepayment');

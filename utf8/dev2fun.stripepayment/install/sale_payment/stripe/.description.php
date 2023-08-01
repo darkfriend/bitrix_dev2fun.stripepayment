@@ -1,7 +1,7 @@
 <?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /**
  * @author darkfriend <hi@darkfriend.ru>
- * @copyright (c) 2019-2022, darkfriend
+ * @copyright (c) 2019-2023, darkfriend
  * @version 1.3.12
  */
 
@@ -51,7 +51,7 @@ $arPSCorrespondence = [
         'GROUP' => 'GENERAL_SETTINGS',
         "DEFAULT" => [
             'PROVIDER_KEY' => 'VALUE',
-            'PROVIDER_VALUE' => implode(', ', array_keys($modeList)),
+            'PROVIDER_VALUE' => implode(', ', array_keys(Dev2funModuleStripeClass::GetSupportModes())),
         ],
         "TYPE" => "PROPERTY",
     ],
