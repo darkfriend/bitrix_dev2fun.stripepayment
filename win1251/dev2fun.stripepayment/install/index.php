@@ -19,7 +19,7 @@ Class dev2fun_stripepayment extends CModule
     var $MODULE_DESCRIPTION;
     var $MODULE_GROUP_RIGHTS = "Y";
 
-    function dev2fun_stripepayment(){
+    public function __construct(){
         $path = str_replace("\\", "/", __FILE__);
         $path = substr($path, 0, strlen($path) - strlen("/index.php"));
         $arModuleVersion = include($path."/version.php");
@@ -36,16 +36,15 @@ Class dev2fun_stripepayment extends CModule
         $this->PARTNER_URI = "http://dev2fun.com/";
     }
 
-    function DoInstall(){
+    public function DoInstall(){
         global $APPLICATION;
         if(!check_bitrix_sessid()) return;
         $APPLICATION->IncludeAdminFile(GetMessage("STEP1"), $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/".$this->MODULE_ID."/install/step1.php");
     }
 
-    function DoUninstall(){
+    public function DoUninstall(){
         global $APPLICATION;
         if(!check_bitrix_sessid()) return;
         $APPLICATION->IncludeAdminFile(GetMessage("UNSTEP1"), $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/".$this->MODULE_ID."/install/unstep1.php");
     }
 }
-?>
