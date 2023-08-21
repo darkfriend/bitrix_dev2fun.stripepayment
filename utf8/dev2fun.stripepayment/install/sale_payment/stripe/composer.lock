@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5d5b2c2947c4010e58a2e883d2905ef7",
+    "content-hash": "819db1237f958f39eb6f8db83f360c2e",
     "packages": [
         {
             "name": "stripe/stripe-php",
-            "version": "v7.0.0",
+            "version": "v12.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "03ee2eeb7b5d711bf7d0f3b3d0f6dfd08d3cb466"
+                "reference": "732996be0714154716f19f73f956d77bafc99334"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/03ee2eeb7b5d711bf7d0f3b3d0f6dfd08d3cb466",
-                "reference": "03ee2eeb7b5d711bf7d0f3b3d0f6dfd08d3cb466",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/732996be0714154716f19f73f956d77bafc99334",
+                "reference": "732996be0714154716f19f73f956d77bafc99334",
                 "shasum": ""
             },
             "require": {
@@ -27,11 +27,11 @@
                 "php": ">=5.6.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.15",
-                "php-coveralls/php-coveralls": "^2.1",
-                "phpunit/phpunit": "^5.7",
-                "squizlabs/php_codesniffer": "^3.3",
-                "symfony/process": "~3.4"
+                "friendsofphp/php-cs-fixer": "3.5.0",
+                "php-coveralls/php-coveralls": "^2.5",
+                "phpstan/phpstan": "^1.2",
+                "phpunit/phpunit": "^5.7 || ^9.0",
+                "squizlabs/php_codesniffer": "^3.3"
             },
             "type": "library",
             "extra": {
@@ -61,7 +61,11 @@
                 "payment processing",
                 "stripe"
             ],
-            "time": "2019-09-03T18:03:06+00:00"
+            "support": {
+                "issues": "https://github.com/stripe/stripe-php/issues",
+                "source": "https://github.com/stripe/stripe-php/tree/v12.0.0"
+            },
+            "time": "2023-08-18T18:55:28+00:00"
         }
     ],
     "packages-dev": [],
@@ -71,5 +75,6 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
 }
