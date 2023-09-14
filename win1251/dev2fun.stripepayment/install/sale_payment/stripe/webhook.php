@@ -2,7 +2,7 @@
 /**
  * @author darkfriend <hi@darkfriend.ru>
  * @copyright (c) 2020-2023, darkfriend
- * @version 1.5.1
+ * @version 1.5.2
  */
 require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
 
@@ -72,6 +72,9 @@ try {
                 throw new \Exception('Status is not succeeded');
             }
             $customer = $stripe->customers->retrieve($charge->customer);
+            if (empty($customer->metadata)) {
+                throw new \Exception('customer metadata is not found!');
+            }
             $orderId = $customer->metadata->toArray()['orderId'] ?? null;
             if (!$orderId) {
                 throw new \Exception('$orderId is not found!');
@@ -82,6 +85,9 @@ try {
             /** @var \Stripe\Checkout\Session $charge */
             $charge = $event->data->object;
             if ($charge->status === 'complete' && $charge->payment_status === 'paid') {
+                if (empty($charge->metadata)) {
+                    throw new \Exception('charge metadata is not found!');
+                }
                 $orderId = $charge->metadata->toArray()['orderId'] ?? null;
                 if (!$orderId) {
                     throw new \Exception('OrderId is not found!');

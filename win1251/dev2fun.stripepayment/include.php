@@ -8,8 +8,8 @@ if (class_exists('Dev2funModuleStripeClass')) return;
 
 class Dev2funModuleStripeClass
 {
-    public static $module_id = 'dev2fun.stripepayment';
-    public static $arScanDir = [
+    static $module_id = 'dev2fun.stripepayment';
+    static $arScanDir = [
         '/local/php_interface/include/sale_payment/stripe/templates',
         '/bitrix/php_interface/include/sale_payment/stripe/templates',
         '/bitrix/modules/dev2fun.stripepayment/sale_payment/stripe/templates',

@@ -2,7 +2,7 @@
 /**
  * @author darkfriend <hi@darkfriend.ru>
  * @copyright (c) 2019-2023, darkfriend
- * @version 1.5.0
+ * @version 1.5.2
  */
 
 use \Bitrix\Main\Application;
@@ -24,14 +24,19 @@ if(!$orderKey) {
     $orderKey = 'ORDER_ID';
 }
 
-$orderId = isset($_REQUEST[$orderKey]) ? $_REQUEST[$orderKey] : null;
-if (!$orderId) $orderId = $request->get('ORDER_ID');
-if (!$orderId) $orderId = $request->get('ID');
-if (!$orderId) $orderId = $request->getPost('accountNumber');
+$orderId = (int)($GLOBALS["SALE_INPUT_PARAMS"]["ORDER"]["ID"] ?? 0);
 if (!$orderId) {
-    $orderId = (int)($GLOBALS["SALE_INPUT_PARAMS"]["ORDER"]["ID"] ?? 0);
+    $orderId = isset($_REQUEST[$orderKey]) ? $_REQUEST[$orderKey] : null;
 }
-
+if (!$orderId) {
+    $orderId = $request->get('ORDER_ID');
+}
+if (!$orderId) {
+    $orderId = $request->get('ID');
+}
+if (!$orderId) {
+    $orderId = $request->getPost('accountNumber');
+}
 if(!$orderId) {
     ShowError('Order Id is not found!');
     return;
@@ -39,6 +44,10 @@ if(!$orderId) {
 
 /** @var \Bitrix\Sale\Order $order */
 $order = Order::load($orderId);
+if (!$order) {
+    ShowError('Order is not found!');
+    return;
+}
 $arOrder = $order->getFieldValues();
 
 $sum = $arOrder['PRICE'];

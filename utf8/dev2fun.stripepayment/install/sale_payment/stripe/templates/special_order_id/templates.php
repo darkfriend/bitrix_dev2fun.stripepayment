@@ -2,27 +2,27 @@
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /**
  * @author darkfriend <hi@darkfriend.ru>
- * @version 1.3.7
+ * @version 1.5.2
  */
 $locale = [
     'card' => [
         'cardLabel' => '',
-        'submitButton' => 'Ïåðåéòè ê îïëàòå',
+        'submitButton' => 'ÐŸÐµÑ€ÐµÐ¹Ñ‚Ð¸ Ðº Ð¾Ð¿Ð»Ð°Ñ‚Ðµ',
     ],
     'sepa' => [
-        'name' => 'Èìÿ',
+        'name' => 'Ð˜Ð¼Ñ',
         'email' => 'Email',
-        'submitButton' => 'Ïåðåéòè ê îïëàòå',
+        'submitButton' => 'ÐŸÐµÑ€ÐµÐ¹Ñ‚Ð¸ Ðº Ð¾Ð¿Ð»Ð°Ñ‚Ðµ',
     ],
     'sofort' => [
-        'name' => 'Èìÿ',
+        'name' => 'Ð˜Ð¼Ñ',
         'email' => 'Email',
-        'bank' => 'Ñòðàíà áàíêà',
-        'submitButton' => 'Ïåðåéòè ê îïëàòå',
+        'bank' => 'Ð¡Ñ‚Ñ€Ð°Ð½Ð° Ð±Ð°Ð½ÐºÐ°',
+        'submitButton' => 'ÐŸÐµÑ€ÐµÐ¹Ñ‚Ð¸ Ðº Ð¾Ð¿Ð»Ð°Ñ‚Ðµ',
     ],
     'giropay' => [
-        'name' => 'Èìÿ',
-        'submitButton' => 'Ïåðåéòè ê îïëàòå',
+        'name' => 'Ð˜Ð¼Ñ',
+        'submitButton' => 'ÐŸÐµÑ€ÐµÐ¹Ñ‚Ð¸ Ðº Ð¾Ð¿Ð»Ð°Ñ‚Ðµ',
     ],
 ];
 $modeList = [
@@ -63,6 +63,18 @@ if(!empty($SALE_CORRESPONDENCE['URL_TO_PAYMENT']['VALUE'])) {
 } else {
     $sessionUrl = $APPLICATION->GetCurDir();
 }
+
+$orderKey = '';
+if (!empty($SALE_CORRESPONDENCE['FIND_ORDER_ID']['VALUE'])) {
+    $orderKey = $SALE_CORRESPONDENCE['FIND_ORDER_ID']['VALUE'];
+}
+if(!$orderKey) {
+    $orderKey = 'ORDER_ID';
+}
+
+if (!empty($_REQUEST[$orderKey])) {
+    $orderID = htmlspecialchars($_REQUEST[$orderKey]);
+}
 ?>
 <script type="text/javascript" src="https://js.stripe.com/v3/"></script>
 <div id="cardVue">
@@ -74,7 +86,7 @@ if(!empty($SALE_CORRESPONDENCE['URL_TO_PAYMENT']['VALUE'])) {
         :amount="<?= ($arOrder['PRICE'] * 100) ?>"
         :amount-eur="<?= ($arOrder['PRICE_EUR'] * 100) ?>"
         :error="'<?= $error ?>'"
-        :order-id="<?= $orderID ?>"
+        :order-id="'<?= $orderID ?>'"
         :mode-list='<?= json_encode($stripeMods) ?>'
         :stripe-client-secret="'<?= $_REQUEST['client_secret'] ?>'"
         :stripe-source="'<?= $_REQUEST['source'] ?>'"
